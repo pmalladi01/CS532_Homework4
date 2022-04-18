@@ -84,3 +84,24 @@ void showall()
         headptr1 = headptr1->next;
     }
 }
+    
+void append(char **args)
+{
+    struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+    struct Node *last = process_list;
+    new_node->args1 = args;
+    strcpy(new_node->arg1, args[1]);
+    strcpy(new_node->arg2, args[2]);
+    new_node->status = WAITING;
+    new_node->next = NULL;
+    new_node->jobid = mxx++;
+    if (process_list == NULL)
+    {
+        process_list = new_node;
+        return;
+    }
+    while (last->next != NULL)
+        last = last->next;
+    last->next = new_node;
+    return;
+}
