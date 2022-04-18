@@ -121,3 +121,45 @@ void parse(char *line, char **argv)
     }
     *argv = '\0';
 }
+
+
+void execute(char **argv, struct Node *ptr)
+{
+    pid_t pid;
+    int status;
+
+    if ((pid = fork()) < 0)
+    { 
+        printf("*** ERROR: forking child process failed\n");
+        exit(1);
+    }
+    else if (pid == 0)
+    {
+        int fdin, fdout;
+        char buff[12];
+        snprintf(buff, 12, "%d.err", getpid());
+        if ((fdin = open(buff, O_CREAT | O_APPEND | O_WRONLY, 0755)) == -1)
+        {
+            printf("Error opening file stderr.txt for error\n");
+        }
+        char buff1[12];
+        snprintf(buff1, 12, "%d.out", getpid());
+        if ((fdout = open(buff1, O_CREAT | O_APPEND | O_WRONLY, 0755)) == -1)
+        {
+            printf("Error opening file stdout.txt for output\n");
+            exit(-1);
+        }
+
+        dup2(fdin, 3);
+        dup2(fdout, 1);
+        if (execvp(*(argv + 1), argv) < 0)
+        {
+            printf("*** ERROR: exec failed\n");
+            exit(1);
+        }
+    }
+    else
+    {
+        ptr->prid = pid;
+    }
+}
