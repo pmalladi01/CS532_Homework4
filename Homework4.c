@@ -52,3 +52,20 @@ void main(int *argc, int **args)
         if (strcmp(argv[0], "submithistory") == 0)
             showall();
     }
+
+    void show()
+{
+    char statuss[4][20] = {"Waiting", "Running", "Completed", "Completed"};
+    struct Node *headptr1 = process_list;
+    struct Node *wait_ptr = NULL;
+    int runcount = 0;
+    printf("jobid\t\tcommand\t\tstatus\n");
+    while (headptr1 != NULL)
+    {
+        if (headptr1->status == RUNNING)
+            printf("%d\t\t%s  %s\t\tRUNNING\n", headptr1->jobid, headptr1->arg1, headptr1->arg2);
+        else if (headptr1->status == WAITING)
+            printf("%d\t\t%s  %s\t\tWAITING\n", headptr1->jobid, headptr1->arg1, headptr1->arg2);
+        headptr1 = headptr1->next;
+    }
+}
