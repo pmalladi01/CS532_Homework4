@@ -163,3 +163,88 @@ void execute(char **argv, struct Node *ptr)
         ptr->prid = pid;
     }
 }
+
+void scheduler(int n)
+{
+    time_t t;
+    int status;
+
+    struct Node *headptr = process_list, *headptr1 = process_list;
+    struct Node *wait_ptr = NULL;
+    int runcount = 0;
+    while (headptr1 != NULL)
+    {
+        if (headptr1->status == RUNIT)
+        {
+
+            runcount--;
+        }
+        if (headptr1->status == RUNNING)
+        {
+            runcount++;
+        }
+        if (headptr1->status == RUNNING)
+        {
+            int pid = headptr1->prid;
+            if ((pid = waitpid(pid, &status, WNOHANG)) == -1)
+            {
+                int www = 1;
+            }
+            else if (pid == 0)
+            {
+                time(&t);
+
+                sleep(1);
+            }
+            else
+            {
+                if (WIFEXITED(status))
+                {
+                    headptr1->status = RUNIT;
+                    time(&t);
+                    strcpy(headptr->endtime, ctime(&t));
+                }
+                else
+                {
+                    headptr1->status = RUNIT;
+                    time(&t);
+                    strcpy(headptr->endtime, ctime(&t));
+                }
+            }
+            if ((pid = waitpid(pid, &status, WNOHANG)) == -1)
+                perror("wait() error");
+            else if (pid == 0)
+            {
+                time(&t);
+
+                sleep(1);
+            }
+            else
+            {
+                if (WIFEXITED(status))
+                {
+                    headptr1->status = RUNIT;
+                    time(&t);
+                    strcpy(headptr->endtime, ctime(&t));
+                }
+            }
+        }
+        headptr1 = headptr1->next;
+    }
+
+    while (headptr != NULL)
+    {
+
+        if (headptr->status == WAITING && runcount < n)
+        {
+            headptr->status = RUNNING;
+
+            time(&t);
+            strcpy(headptr->starttime, ctime(&t));
+            execute(headptr->args1, headptr);
+        }
+
+        headptr = headptr->next;
+    }
+  }
+}
