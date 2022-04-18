@@ -53,7 +53,7 @@ void main(int *argc, int **args)
             showall();
     }
 
-    void show()
+void show()
 {
     char statuss[4][20] = {"Waiting", "Running", "Completed", "Completed"};
     struct Node *headptr1 = process_list;
@@ -66,6 +66,21 @@ void main(int *argc, int **args)
             printf("%d\t\t%s  %s\t\tRUNNING\n", headptr1->jobid, headptr1->arg1, headptr1->arg2);
         else if (headptr1->status == WAITING)
             printf("%d\t\t%s  %s\t\tWAITING\n", headptr1->jobid, headptr1->arg1, headptr1->arg2);
+        headptr1 = headptr1->next;
+    }
+}
+    
+void showall()
+{
+    char statuss[4][20] = {"Waiting", "Running", "Completed", "Completed"};
+    struct Node *headptr1 = process_list;
+    struct Node *wait_ptr = NULL;
+    int runcount = 0;
+    printf("Job id\tCommand\tStarttime\tEndtime\tStatus\n");
+    while (headptr1 != NULL)
+    {
+        if (headptr1->status == RUNIT)
+            printf("%d\t%s %s\t%s\t%s\tSUCCESS\n", headptr1->jobid, headptr1->arg1, headptr1->arg2, headptr1->starttime, headptr1->endtime);
         headptr1 = headptr1->next;
     }
 }
